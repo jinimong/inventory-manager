@@ -1,11 +1,15 @@
 import graphene
 
-from products.schema import Query as ProductQuery
-from events.schema import Query as EventQuery
+import products.schema
+import events.schema
 
 
-class Query(ProductQuery, EventQuery):
+class Query(products.schema.Query, events.schema.Query):
     pass
 
 
-schema = graphene.Schema(query=Query)
+class Mutation(products.schema.Mutation):
+    pass
+
+
+schema = graphene.Schema(query=Query, mutation=Mutation)
