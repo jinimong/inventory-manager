@@ -26,7 +26,7 @@ EVENT_TYPE_CHOICES = (
 class Store(TimestampedModel):
     """ 입점처 """
 
-    name = models.CharField(_("이름"), max_length=50)
+    name = models.CharField(_("이름"), max_length=50, unique=True)
     description = models.TextField(_("설명"))
 
     def __str__(self):
