@@ -8,7 +8,7 @@ class Query(products.schema.Query, events.schema.Query):
     pass
 
 
-class Mutation(products.schema.Mutation):
+class Mutation(products.schema.Mutation, events.schema.Mutation):
     pass
 
 

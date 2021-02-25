@@ -1,4 +1,5 @@
 from django.db import models
+from django.shortcuts import get_object_or_404
 from django.utils.translation import gettext as _
 
 from core.models import TimestampedModel, Image
@@ -40,6 +41,13 @@ class Product(TimestampedModel):
     def __str__(self):
         return self.name
 
+    @classmethod
+    def update_inventory(cls, store, product_id, value):
+        obj = get_object_or_404(cls, pk=product_id)
+        obj.count += value
+        obj.save()
+        return obj
+
 
 class StoreProduct(TimestampedModel):
     """ 입점처 제품 """
@@ -61,9 +69,15 @@ class StoreProduct(TimestampedModel):
 
     @classmethod
     def update_inventory(cls, store, product_id, value):
-        obj, created = cls.objects.update_or_create(
-            store=store, product_id=product_id, defaults={"value": value}
-        )
+        try:
+            obj = cls.objects.get(store=store, product_id=product_id)
+            obj.count += value
+            obj.save()
+        except cls.DoesNotExist:
+            obj = cls.objects.create(
+                store=store, product_id=product_id, count=value
+            )
+        return obj
 
 
 class ProductImage(Image):

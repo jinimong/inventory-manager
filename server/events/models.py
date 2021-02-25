@@ -1,16 +1,17 @@
 from django.db import models
 from django.utils.translation import gettext as _
-
 from core.models import TimestampedModel, Image
+from core.constants import (
+    SELL_DIRECT,
+    ORDER_PRODUCT,
+    SEND_PRODUCT,
+    SETTLE_SALE,
+    LEAVE_STORE,
+    DEFECT_PRODUCT_IN_STORE,
+    DEFECT_PRODUCT_IN_HOME,
+)
+from .mixins.model_mixins import EventMixin, InventoryChangeMixin
 
-
-SELL_DIRECT = "SD"
-ORDER_PRODUCT = "OP"
-SEND_PRODUCT = "SP"
-SETTLE_SALE = "SS"
-LEAVE_STORE = "LS"
-DEFECT_PRODUCT_IN_STORE = "DS"
-DEFECT_PRODUCT_IN_HOME = "DH"
 
 EVENT_TYPE_CHOICES = (
     (SELL_DIRECT, "개인판매"),
@@ -33,7 +34,7 @@ class Store(TimestampedModel):
         return self.name
 
 
-class Event(TimestampedModel):
+class Event(TimestampedModel, EventMixin):
     """ 재고 변화 내역 """
 
     event_type = models.CharField(
@@ -52,7 +53,7 @@ class Event(TimestampedModel):
         return f"{self.get_event_type_display()} ({self.description})"
 
 
-class InventoryChange(TimestampedModel):
+class InventoryChange(TimestampedModel, InventoryChangeMixin):
     """ 재고 변화 """
 
     event = models.ForeignKey(
