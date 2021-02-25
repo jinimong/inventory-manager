@@ -4,7 +4,7 @@ from django.db import transaction
 
 from graphene_django.types import DjangoObjectType
 
-from .models import Store, Event, InventoryChange, EVENT_TYPE_CHOICES
+from .models import Store, Event, InventoryChange
 
 
 class StoreType(DjangoObjectType):

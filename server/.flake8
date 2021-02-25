@@ -1,0 +1,6 @@
+[flake8]
+exclude = venv, migrations, config/settings
+ignore = W605 , E501, W503, E203
+# W503 line break before binary operator
+# E501 line length
+# W605 invalid escape sequence

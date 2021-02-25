@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext as _
-from core.models import TimestampedModel, Image
+from core.models import TimestampedModel
 from core.constants import (
     SELL_DIRECT,
     ORDER_PRODUCT,
