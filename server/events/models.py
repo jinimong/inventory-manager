@@ -8,18 +8,18 @@ SELL_DIRECT = "SD"
 ORDER_PRODUCT = "OP"
 SEND_PRODUCT = "SP"
 SETTLE_SALE = "SS"
-ENTER_STORE = "ES"
 LEAVE_STORE = "LS"
-DEFECT_PRODUCT = "DP"
+DEFECT_PRODUCT_IN_STORE = "DS"
+DEFECT_PRODUCT_IN_HOME = "DH"
 
 EVENT_TYPE_CHOICES = (
-    (SELL_DIRECT, "개인 판매"),
-    (ORDER_PRODUCT, "발주"),
-    (SEND_PRODUCT, "입고"),
-    (SETTLE_SALE, "정산"),
-    (ENTER_STORE, "입점"),
-    (LEAVE_STORE, "퇴점"),
-    (DEFECT_PRODUCT, "불량"),
+    (SELL_DIRECT, "개인판매"),
+    (ORDER_PRODUCT, "제품발주"),
+    (SEND_PRODUCT, "입점처 입고"),
+    (SETTLE_SALE, "판매내역정산"),
+    (LEAVE_STORE, "입점처 퇴점"),
+    (DEFECT_PRODUCT_IN_STORE, "불량:입점처"),
+    (DEFECT_PRODUCT_IN_HOME, "불량:집"),
 )
 
 

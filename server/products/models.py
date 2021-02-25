@@ -41,9 +41,34 @@ class Product(TimestampedModel):
         return self.name
 
 
+class StoreProduct(TimestampedModel):
+    """ 입점처 제품 """
+
+    store = models.ForeignKey(
+        "events.Store", verbose_name=_("입점처"), on_delete=models.CASCADE,
+    )
+    product = models.ForeignKey(
+        "products.Product", verbose_name=_("제품"), on_delete=models.CASCADE,
+    )
+    count = models.IntegerField(_("재고 수량"))
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["store", "product"], name="store-product"
+            )
+        ]
+
+    @classmethod
+    def update_inventory(cls, store, product_id, value):
+        obj, created = cls.objects.update_or_create(
+            store=store, product_id=product_id, defaults={"value": value}
+        )
+
+
 class ProductImage(Image):
     """ 제품 사진 """
 
     product = models.ForeignKey(
-        "Product", verbose_name=_("제품 사진"), on_delete=models.CASCADE
+        "Product", verbose_name=_("제품"), on_delete=models.CASCADE
     )
