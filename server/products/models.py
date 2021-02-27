@@ -39,7 +39,7 @@ class Product(TimestampedModel):
     archived = models.BooleanField(_("재입고 예정없음"), default=False)
 
     def __str__(self):
-        return self.name
+        return f"{self.name} : {self.count}"
 
     @classmethod
     def update_inventory(cls, store, product_id, value):
@@ -66,6 +66,9 @@ class StoreProduct(TimestampedModel):
                 fields=["store", "product"], name="store-product"
             )
         ]
+
+    def __str__(self):
+        return f"[{self.store.name}] {self.product.name} : {self.count}"
 
     @classmethod
     def update_inventory(cls, store, product_id, value):
