@@ -4,7 +4,13 @@ from django.db import transaction
 
 from graphene_django.types import DjangoObjectType
 
-from .models import ProductMaterial, ProductCategory, Product, ProductImage
+from .models import (
+    ProductMaterial,
+    ProductCategory,
+    Product,
+    StoreProduct,
+    ProductImage,
+)
 
 
 class ProductMaterialType(DjangoObjectType):
@@ -22,6 +28,11 @@ class ProductType(DjangoObjectType):
         model = Product
 
 
+class StoreProductType(DjangoObjectType):
+    class Meta:
+        model = StoreProduct
+
+
 class ProductImageType(DjangoObjectType):
     class Meta:
         model = ProductImage
@@ -34,6 +45,8 @@ class Query(graphene.ObjectType):
     all_categories = graphene.List(ProductCategoryType)
     product = graphene.Field(ProductType, id=graphene.Int())
     all_products = graphene.List(ProductType)
+    store_product = graphene.Field(StoreProductType, id=graphene.Int())
+    all_store_products = graphene.List(StoreProductType)
 
     def resolve_material(self, info, **kwargs):
         return ProductMaterial.objects.get(id=kwargs.get("id"))
@@ -52,6 +65,12 @@ class Query(graphene.ObjectType):
 
     def resolve_all_products(self, info, **kwargs):
         return Product.objects.all()
+
+    def resolve_store_product(self, info, **kwargs):
+        return StoreProduct.objects.get(id=kwargs.get("id"))
+
+    def resolve_all_store_products(self, info, **kwargs):
+        return StoreProduct.objects.all()
 
 
 class CreateProductMaterial(graphene.Mutation):
