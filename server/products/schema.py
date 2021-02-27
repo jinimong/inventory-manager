@@ -28,15 +28,27 @@ class ProductImageType(DjangoObjectType):
 
 
 class Query(graphene.ObjectType):
+    material = graphene.Field(ProductMaterialType, id=graphene.Int())
     all_materials = graphene.List(ProductMaterialType)
+    category = graphene.Field(ProductCategoryType, id=graphene.Int())
     all_categories = graphene.List(ProductCategoryType)
+    product = graphene.Field(ProductType, id=graphene.Int())
     all_products = graphene.List(ProductType)
+
+    def resolve_material(self, info, **kwargs):
+        return ProductMaterial.objects.get(id=kwargs.get("id"))
 
     def resolve_all_materials(self, info, **kwargs):
         return ProductMaterial.objects.all()
 
+    def resolve_category(self, info, **kwargs):
+        return ProductCategory.objects.get(id=kwargs.get("id"))
+
     def resolve_all_categories(self, info, **kwargs):
         return ProductCategory.objects.all()
+
+    def resolve_product(self, info, **kwargs):
+        return Product.objects.get(id=kwargs.get("id"))
 
     def resolve_all_products(self, info, **kwargs):
         return Product.objects.all()

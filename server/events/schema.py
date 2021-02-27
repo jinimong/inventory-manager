@@ -23,11 +23,19 @@ class InventoryChangeType(DjangoObjectType):
 
 
 class Query(graphene.ObjectType):
+    store = graphene.Field(StoreType, id=graphene.Int())
     all_stores = graphene.List(StoreType)
+    event = graphene.Field(EventType, id=graphene.Int())
     all_events = graphene.List(EventType)
+
+    def resolve_store(self, info, **kwargs):
+        return Store.objects.get(id=kwargs.get("id"))
 
     def resolve_all_stores(self, info, **kwargs):
         return Store.objects.all()
+
+    def resolve_event(self, info, **kwargs):
+        return Event.objects.get(id=kwargs.get("id"))
 
     def resolve_all_events(self, info, **kwargs):
         return Event.objects.all()
