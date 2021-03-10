@@ -19,6 +19,7 @@ export type Product = {
   priceWithPees: number;
   count: number;
   archived: boolean;
+  storeproductSet: StoreProduct[];
 };
 
 export type InventoryChange = {
@@ -35,6 +36,7 @@ export type Store = {
 };
 
 export type StoreProduct = {
+  id: number;
   store: Store;
   product: Product;
   count: number;
