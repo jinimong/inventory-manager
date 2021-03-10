@@ -13,7 +13,7 @@ const EVENTS = gql`
   }
 `;
 
-const Events = () => {
+const Events: React.FC = () => {
   const { loading, error, data } = useQuery<{
     allEvents: Event[];
   }>(EVENTS);

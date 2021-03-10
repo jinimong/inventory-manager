@@ -8,7 +8,7 @@ import Home from './Home';
 import ProductDetail from './ProductDetail';
 import Products from './Products';
 
-function App() {
+const App: React.FC = () => {
   return (
     <ApolloProvider client={client}>
       <Router>
@@ -20,6 +20,6 @@ function App() {
       </Router>
     </ApolloProvider>
   );
-}
+};
 
 export default App;

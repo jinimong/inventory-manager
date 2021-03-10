@@ -20,7 +20,7 @@ const PRODUCTS = gql`
   }
 `;
 
-const Products = () => {
+const Products: React.FC = () => {
   const { loading, error, data } = useQuery<{
     allProducts: Product[];
   }>(PRODUCTS);
