@@ -13,6 +13,9 @@ const Home: React.FC = () => {
         <li>
           <Link to="/products">Products</Link>
         </li>
+        <li>
+          <Link to="/stores">Stores</Link>
+        </li>
       </ul>
     </div>
   );
