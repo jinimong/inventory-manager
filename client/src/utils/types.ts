@@ -32,6 +32,7 @@ export type Store = {
   id: number;
   name: string;
   description: string;
+  storeproductSet: StoreProduct[];
   eventSet: Event[];
 };
 

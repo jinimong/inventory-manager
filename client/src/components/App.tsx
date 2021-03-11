@@ -7,6 +7,7 @@ import Events from './Events';
 import Home from './Home';
 import ProductDetail from './ProductDetail';
 import Products from './Products';
+import StoreDetail from './StoreDetail';
 import Stores from './Stores';
 
 const App: React.FC = () => {
@@ -19,6 +20,7 @@ const App: React.FC = () => {
         <Route exact path="/products" component={Products} />
         <Route exact path="/products/:id" component={ProductDetail} />
         <Route exact path="/stores" component={Stores} />
+        <Route exact path="/stores/:id" component={StoreDetail} />
       </Router>
     </ApolloProvider>
   );
