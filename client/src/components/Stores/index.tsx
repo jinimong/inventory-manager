@@ -1,21 +1,14 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { gql, useQuery } from '@apollo/client';
-import { Store } from '../utils/types';
-
-const STORES = gql`
-  query {
-    allStores {
-      id
-      name
-    }
-  }
-`;
+import { useQuery } from '@apollo/client';
+import { Store } from '../../utils/types';
+import query from './query';
+import CreateStore from '../CreateStore';
 
 const Stores: React.FC = () => {
   const { loading, error, data } = useQuery<{
     allStores: Store[];
-  }>(STORES);
+  }>(query);
   const { pathname } = useLocation();
   if (loading || error || !data) {
     return <div>Loading...</div>;
@@ -23,6 +16,8 @@ const Stores: React.FC = () => {
   return (
     <div>
       <h3>Stores</h3>
+      <hr />
+      <CreateStore />
       <hr />
       <ul>
         {data.allStores.map((store) => (
