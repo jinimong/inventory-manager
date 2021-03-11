@@ -36,9 +36,14 @@ const CreateProduct: React.FC = () => {
   const [createProduct] = useMutation(CREATE_PRODUCT);
 
   // eslint-disable-next-line @typescript-eslint/unbound-method
-  const { register, handleSubmit } = useForm<ProductInput>({ defaultValues });
+  const { register, handleSubmit, reset } = useForm<ProductInput>({
+    defaultValues,
+  });
   const onSubmit = (productInput: ProductInput) =>
-    createProduct({ variables: { productInput }, refetchQueries: [{ query }] });
+    createProduct({
+      variables: { productInput },
+      refetchQueries: [{ query }],
+    }).then(() => reset());
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <input placeholder="제품 이름" name="name" ref={register} required />

@@ -1,6 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { gql, useMutation } from '@apollo/client';
+import { useForm } from 'react-hook-form';
 import query from './Stores/query';
+
+type StoreInput = {
+  name: string;
+};
 
 const CREATE_STORE = gql`
   mutation CreateStore($name: String!) {
@@ -13,30 +18,21 @@ const CREATE_STORE = gql`
 `;
 
 const CreateStore: React.FC = () => {
-  const [state, setState] = useState({ name: '' });
-  const { name } = state;
+  const defaultValues = { name: '' };
   const [createStore] = useMutation(CREATE_STORE);
+
+  // eslint-disable-next-line @typescript-eslint/unbound-method
+  const { register, handleSubmit, reset } = useForm<StoreInput>({
+    defaultValues,
+  });
+  const onSubmit = (formData: StoreInput) =>
+    createStore({
+      variables: { ...formData },
+      refetchQueries: [{ query }],
+    }).then(() => reset());
   return (
-    <form
-      onSubmit={async (e) => {
-        e.preventDefault();
-        await createStore({
-          variables: { name },
-          refetchQueries: [{ query }],
-        });
-        setState({ name: '' });
-      }}
-    >
-      <input
-        placeholder="입점처 이름"
-        value={state.name}
-        onChange={(e) =>
-          setState((prevState) => ({
-            ...prevState,
-            name: e.target.value,
-          }))
-        }
-      />
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <input placeholder="입점처 이름" name="name" ref={register} />
       <button type="submit">Submit</button>
     </form>
   );
