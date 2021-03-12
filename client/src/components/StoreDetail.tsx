@@ -1,7 +1,7 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { gql, useQuery } from '@apollo/client';
-import { Store, StoreProduct } from '../utils/types';
+import { Store } from '../utils/types';
 
 const STORE_DETAIL = gql`
   query storeDetail($id: Int!) {
@@ -55,7 +55,7 @@ const StoreDetail: React.FC = () => {
       )}
       {storeproductSet && (
         <ul>
-          {(storeproductSet as StoreProduct[]).map((storeProduct) => (
+          {storeproductSet.map((storeProduct) => (
             <li key={storeProduct.id}>
               <span>{storeProduct.product.name}</span>
               <span>{storeProduct.count}</span>

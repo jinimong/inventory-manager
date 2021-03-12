@@ -1,7 +1,8 @@
 import React from 'react';
 import { gql, useMutation } from '@apollo/client';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import query from './Products/query';
+import ProductMaterialSelect from './ProductMaterialSelect';
 
 type ProductInput = {
   name: string;
@@ -36,7 +37,7 @@ const CreateProduct: React.FC = () => {
   const [createProduct] = useMutation(CREATE_PRODUCT);
 
   // eslint-disable-next-line @typescript-eslint/unbound-method
-  const { register, handleSubmit, reset } = useForm<ProductInput>({
+  const { control, register, handleSubmit, reset } = useForm<ProductInput>({
     defaultValues,
   });
   const onSubmit = (productInput: ProductInput) =>
@@ -49,11 +50,13 @@ const CreateProduct: React.FC = () => {
       <input placeholder="제품 이름" name="name" ref={register} required />
       <input placeholder="바코드" name="barcode" ref={register} />
       <textarea placeholder="제품 설명" name="description" ref={register} />
-      <select name="materials" ref={register} multiple>
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-      </select>
+      <Controller
+        name="materials"
+        control={control}
+        render={({ onChange, ref }) => (
+          <ProductMaterialSelect onChange={onChange} inputRef={ref} isMulti />
+        )}
+      />
       <select name="categories" ref={register} multiple>
         <option value="1">1</option>
         <option value="2">2</option>

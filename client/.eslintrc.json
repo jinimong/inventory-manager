@@ -22,6 +22,10 @@
       }
     }
   },
+  "rules": {
+    "react/jsx-props-no-spreading": "off",
+    "react/prop-types": "off"
+  },
   "ignorePatterns": [
     "node_modules/",
     "src/react-app-env.d.ts",
