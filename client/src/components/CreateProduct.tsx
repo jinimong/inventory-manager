@@ -3,6 +3,7 @@ import { gql, useMutation } from '@apollo/client';
 import { Controller, useForm } from 'react-hook-form';
 import query from './Products/query';
 import ProductMaterialSelect from './ProductMaterialSelect';
+import ProductCategorySelect from './ProductCategorySelect';
 
 type ProductInput = {
   name: string;
@@ -57,11 +58,13 @@ const CreateProduct: React.FC = () => {
           <ProductMaterialSelect onChange={onChange} inputRef={ref} isMulti />
         )}
       />
-      <select name="categories" ref={register} multiple>
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-      </select>
+      <Controller
+        name="categories"
+        control={control}
+        render={({ onChange, ref }) => (
+          <ProductCategorySelect onChange={onChange} inputRef={ref} isMulti />
+        )}
+      />
       <input placeholder="가격" type="number" name="price" ref={register} />
       <input
         placeholder="수수료 포함 가격"
