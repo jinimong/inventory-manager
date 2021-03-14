@@ -3,7 +3,6 @@ import { Link, useLocation } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { Product } from '../../utils/types';
 import query from './query';
-import CreateProduct from '../CreateProduct';
 
 const Products: React.FC = () => {
   const { loading, error, data } = useQuery<{
@@ -17,7 +16,7 @@ const Products: React.FC = () => {
     <div>
       <h3>Products</h3>
       <hr />
-      <CreateProduct />
+      <Link to={`${pathname}/new`}>Create Product</Link>
       <hr />
       <ul>
         {data.allProducts.map((product) => (
