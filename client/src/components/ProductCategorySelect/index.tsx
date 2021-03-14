@@ -1,12 +1,12 @@
 import { useMutation, useQuery } from '@apollo/client';
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { OptionTypeBase } from 'react-select';
 import CreatableSelect, { Props } from 'react-select/creatable';
-import { OptionType, ProductMaterial } from '../../utils/types';
-import CREATE_MATERIAL from './mutation';
+import { OptionType, ProductCategory } from '../../utils/types';
+import CREATE_CATEGORY from './mutation';
 import query from './query';
 
-const ProductMaterialSelect: React.FC<Props<OptionTypeBase>> = ({
+const ProductCategorySelect: React.FC<Props<OptionTypeBase>> = ({
   onChange,
   ...rest
 }) => {
@@ -17,19 +17,19 @@ const ProductMaterialSelect: React.FC<Props<OptionTypeBase>> = ({
     isLoading: true,
     options: [],
   });
-  const [createMaterial] = useMutation(CREATE_MATERIAL, {
+  const [createCategory] = useMutation(CREATE_CATEGORY, {
     refetchQueries: [{ query }],
   });
   const { loading, error, data } = useQuery<{
-    allMaterials: ProductMaterial[];
+    allCategories: ProductCategory[];
   }>(query);
 
   useEffect(() => {
     if (data) {
-      const { allMaterials } = data;
-      const options: OptionType[] = allMaterials.map((material) => ({
-        label: material.name,
-        value: material.id,
+      const { allCategories } = data;
+      const options: OptionType[] = allCategories.map((category) => ({
+        label: category.name,
+        value: category.id,
       }));
       setState((prevState) => ({
         ...prevState,
@@ -51,10 +51,12 @@ const ProductMaterialSelect: React.FC<Props<OptionTypeBase>> = ({
   return (
     <CreatableSelect
       options={options}
-      placeholder="재질을 선택하세요"
+      placeholder="카테고리를 선택하세요"
       isDisabled={isLoading}
       isLoading={isLoading}
-      formatCreateLabel={(inputValue: string) => `${inputValue} 재질 생성하기`}
+      formatCreateLabel={(inputValue: string) =>
+        `${inputValue} 카테고리 생성하기`
+      }
       onChange={async (newValue, actionMeta) => {
         let newOptions = (newValue as OptionType[]) || [];
         if (actionMeta.action === 'create-option') {
@@ -63,16 +65,16 @@ const ProductMaterialSelect: React.FC<Props<OptionTypeBase>> = ({
             const newOption = newOptions[optionsLength - 1];
             if (newOption && newOption.__isNew__) {
               const name = newOption.label;
-              const response = await createMaterial({ variables: { name } });
+              const response = await createCategory({ variables: { name } });
               newOptions = newOptions.slice(0, optionsLength - 1).concat({
                 label: name,
                 value: (response as {
                   data: {
-                    createMaterial: {
-                      material: ProductMaterial;
+                    createCategory: {
+                      category: ProductCategory;
                     };
                   };
-                }).data.createMaterial.material.id,
+                }).data.createCategory.category.id,
               });
             }
           } catch (err) {
@@ -89,4 +91,4 @@ const ProductMaterialSelect: React.FC<Props<OptionTypeBase>> = ({
   );
 };
 
-export default ProductMaterialSelect;
+export default ProductCategorySelect;
