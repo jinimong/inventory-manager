@@ -24,6 +24,9 @@ const Events: React.FC = () => {
   return (
     <div>
       <h3>Events</h3>
+      <hr />
+      <Link to={`${pathname}/new`}>Create Event</Link>
+      <hr />
       <ul>
         {data.allEvents.map((event) => (
           <li key={event.id}>
