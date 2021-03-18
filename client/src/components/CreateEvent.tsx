@@ -1,8 +1,15 @@
-import React from 'react';
-import { gql, useMutation } from '@apollo/client';
-import { useFieldArray, useForm } from 'react-hook-form';
+import React, { useState } from 'react';
+import { gql, useMutation, useQuery } from '@apollo/client';
+import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import { ErrorMessage } from '@hookform/error-message';
-import { EventType, EventTypeMap, eventTypesAboutStore } from '../utils/types';
+import Select from 'react-select';
+import {
+  EventType,
+  Product,
+  EventTypeMap,
+  eventTypesAboutStore,
+  OptionType,
+} from '../utils/types';
 
 type InventoryChangeInput = {
   productId: number;
@@ -26,6 +33,15 @@ const CREATE_EVENT = gql`
   }
 `;
 
+const PRODUCTS = gql`
+  query {
+    allProducts {
+      id
+      name
+    }
+  }
+`;
+
 const CreateEvent: React.FC = () => {
   const defaultValues = {
     eventType: '',
@@ -34,6 +50,11 @@ const CreateEvent: React.FC = () => {
     inventorychangeSet: [{ productId: undefined, value: 1 }],
   };
   const [createEvent] = useMutation(CREATE_EVENT);
+  const { loading, error, data } = useQuery<{
+    allProducts: Product[];
+  }>(PRODUCTS);
+
+  const [products, setProducts] = useState<(string | number)[]>([]);
 
   // eslint-disable-next-line @typescript-eslint/unbound-method
   const {
@@ -44,6 +65,7 @@ const CreateEvent: React.FC = () => {
     errors,
     reset,
   } = useForm<EventInput>({ defaultValues, shouldUnregister: false });
+
   const {
     fields: inventoryChangeFields,
     remove,
@@ -52,6 +74,12 @@ const CreateEvent: React.FC = () => {
     name: 'inventorychangeSet',
     control,
   });
+
+  if (loading || error || !data) {
+    return <div>Loading...</div>;
+  }
+  const { allProducts } = data;
+
   const watchEventType = watch('eventType');
   const onSubmit = (eventInput: EventInput) => console.log(eventInput);
   // createEvent({
@@ -72,14 +100,37 @@ const CreateEvent: React.FC = () => {
       )}
       <textarea placeholder="메모" name="description" ref={register} />
       {inventoryChangeFields.map((field, index) => {
+        const otherFieldSelect = products.filter(
+          (value, fieldIndex) => index !== fieldIndex,
+        );
+        const options = allProducts
+          .filter((product) => !otherFieldSelect.includes(product.id))
+          .map((product) => ({
+            label: product.name,
+            value: product.id,
+          }));
         return (
           <div key={field.id}>
-            <input
+            <Controller
               name={`inventorychangeSet[${index}].productId`}
-              ref={register()}
-              defaultValue={field.productId}
+              control={control}
+              render={({ onChange, ref }) => (
+                <Select
+                  onChange={(value, actionMeta) => {
+                    const productId = (value as OptionType).value;
+                    onChange(productId, actionMeta);
+                    const newProducts = [...products];
+                    newProducts[index] = productId;
+                    setProducts(newProducts);
+                  }}
+                  inputRef={ref}
+                  options={options}
+                />
+              )}
+              options={options}
               required
             />
+
             <input
               type="number"
               name={`inventorychangeSet[${index}].value`}
