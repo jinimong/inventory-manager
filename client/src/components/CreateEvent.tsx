@@ -164,6 +164,7 @@ const CreateEvent: React.FC = () => {
             value: 1,
           })
         }
+        disabled={inventoryChangeFields.length === allProducts.length}
       >
         Append
       </button>
