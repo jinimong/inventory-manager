@@ -3,6 +3,7 @@ import { gql, useMutation, useQuery } from '@apollo/client';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import { ErrorMessage } from '@hookform/error-message';
 import Select from 'react-select';
+import { useHistory } from 'react-router-dom';
 import {
   EventType,
   Product,
@@ -63,7 +64,6 @@ const CreateEvent: React.FC = () => {
     watch,
     handleSubmit,
     errors,
-    reset,
   } = useForm<EventInput>({ defaultValues, shouldUnregister: false });
 
   const {
@@ -75,17 +75,18 @@ const CreateEvent: React.FC = () => {
     control,
   });
 
+  const history = useHistory();
+
   if (loading || error || !data) {
     return <div>Loading...</div>;
   }
   const { allProducts } = data;
 
   const watchEventType = watch('eventType');
-  const onSubmit = (eventInput: EventInput) => console.log(eventInput);
-  // createEvent({
-  //   variables: { eventInput },
-  //   refetchQueries: [{ query }],
-  // }).then(() => reset());
+  const onSubmit = (eventInput: EventInput) =>
+    createEvent({
+      variables: { eventInput },
+    }).then(() => history.push('/events'));
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <select name="eventType" ref={register} required>
