@@ -1,3 +1,5 @@
+import { EventType } from './common';
+
 export type ProductMaterial = {
   id: number;
   name: string;
@@ -45,7 +47,7 @@ export type StoreProduct = {
 
 export type Event = {
   id: number;
-  eventType: string;
+  eventType: EventType;
   createdAt: string;
   updatedAt: string;
   description: string;
