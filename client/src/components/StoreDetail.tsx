@@ -53,7 +53,8 @@ const StoreDetail: React.FC = () => {
           <span>{description}</span>
         </div>
       )}
-      {storeproductSet && (
+      <hr />
+      {storeproductSet.length ? (
         <ul>
           {storeproductSet.map((storeProduct) => (
             <li key={storeProduct.id}>
@@ -62,8 +63,11 @@ const StoreDetail: React.FC = () => {
             </li>
           ))}
         </ul>
+      ) : (
+        <div>입고된 상품 없음</div>
       )}
-      {eventSet && (
+      <hr />
+      {eventSet.length ? (
         <ul>
           {eventSet.map((event) => (
             <li key={event.id}>
@@ -72,6 +76,8 @@ const StoreDetail: React.FC = () => {
             </li>
           ))}
         </ul>
+      ) : (
+        <div>기록 없음</div>
       )}
     </div>
   );
