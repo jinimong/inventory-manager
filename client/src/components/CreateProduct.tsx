@@ -1,6 +1,7 @@
 import React from 'react';
 import { gql, useMutation } from '@apollo/client';
 import { Controller, useForm } from 'react-hook-form';
+import { useHistory } from 'react-router-dom';
 import query from './Products/query';
 import ProductMaterialSelect from './ProductMaterialSelect';
 import ProductCategorySelect from './ProductCategorySelect';
@@ -36,16 +37,19 @@ const CreateProduct: React.FC = () => {
     priceWithPees: 2500,
   };
   const [createProduct] = useMutation(CREATE_PRODUCT);
+  const history = useHistory();
 
   // eslint-disable-next-line @typescript-eslint/unbound-method
-  const { control, register, handleSubmit, reset } = useForm<ProductInput>({
+  const { control, register, handleSubmit } = useForm<ProductInput>({
     defaultValues,
   });
   const onSubmit = (productInput: ProductInput) =>
     createProduct({
       variables: { productInput },
       refetchQueries: [{ query }],
-    }).then(() => reset());
+    })
+      .then(() => history.push('/products'))
+      .catch((err) => alert(err));
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <input placeholder="제품 이름" name="name" ref={register} required />

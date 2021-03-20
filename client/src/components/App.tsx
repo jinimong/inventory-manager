@@ -4,6 +4,7 @@ import { HashRouter as Router, Route, Switch } from 'react-router-dom';
 import client from '../graphql/apollo';
 import CreateEvent from './CreateEvent';
 import CreateProduct from './CreateProduct';
+import CreateStore from './CreateStore';
 import EventDetail from './EventDetail';
 import Events from './Events';
 import Home from './Home';
@@ -25,6 +26,7 @@ const App: React.FC = () => {
           <Route exact path="/products/new" component={CreateProduct} />
           <Route exact path="/products/:id" component={ProductDetail} />
           <Route exact path="/stores" component={Stores} />
+          <Route exact path="/stores/new" component={CreateStore} />
           <Route exact path="/stores/:id" component={StoreDetail} />
         </Switch>
       </Router>

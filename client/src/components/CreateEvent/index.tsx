@@ -40,7 +40,9 @@ const CreateEvent: React.FC = () => {
   const onSubmit = (eventInput: EventInput) =>
     createEvent({
       variables: { eventInput },
-    }).then(() => history.push('/events'));
+    })
+      .then(() => history.push('/events'))
+      .catch((err) => alert(err));
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
