@@ -9,6 +9,7 @@ import {
 } from '../../utils/types';
 import { EventInput } from './types';
 import InventoryChangeFields from './InventoryChangeFields';
+import StoreIdField from './StoreIdField';
 
 const CREATE_EVENT = gql`
   mutation CreateEvent($eventInput: EventInput) {
@@ -51,7 +52,7 @@ const CreateEvent: React.FC = () => {
         ))}
       </select>
       {eventTypesAboutStore.includes(watchEventType as EventType) && (
-        <input placeholder="입점처" name="storeId" ref={register} />
+        <StoreIdField {...form} />
       )}
       <textarea placeholder="메모" name="description" ref={register} />
       <InventoryChangeFields {...form} />
