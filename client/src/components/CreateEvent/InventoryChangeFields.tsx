@@ -94,9 +94,11 @@ const InventoryChangeFields: React.FC<UseFormMethods<EventInput>> = ({
               defaultValue={field.value}
               required
             />
-            <button type="button" onClick={() => remove(index)}>
-              -
-            </button>
+            {fields.length > 1 && (
+              <button type="button" onClick={() => remove(index)}>
+                -
+              </button>
+            )}
             <ErrorMessage
               errors={errors}
               name={`inventorychangeSet[${index}].value`}
