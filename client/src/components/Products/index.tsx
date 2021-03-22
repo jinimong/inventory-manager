@@ -23,6 +23,7 @@ const Products: React.FC = () => {
           <li key={product.id}>
             <Link to={`${pathname}/${product.id}`}>
               <span>{product.name}</span>
+              <span>{product.count}</span>
               <span>
                 ({product.materials.map((material) => material.name).join('/')})
               </span>

@@ -11,6 +11,7 @@ const PRODUCTS = gql`
     allProducts {
       id
       name
+      count
     }
   }
 `;
@@ -34,6 +35,10 @@ const InventoryChangeFields: React.FC<UseFormMethods<EventInput>> = ({
     return <div>Loading...</div>;
   }
   const { allProducts } = data;
+  const validProducts = allProducts.filter((product) => product.count > 0);
+  const productCountMap = new Map(
+    validProducts.map((product) => [product.id.toString(), product.count]),
+  );
 
   return (
     <>
@@ -45,7 +50,7 @@ const InventoryChangeFields: React.FC<UseFormMethods<EventInput>> = ({
             value: 1,
           })
         }
-        disabled={fields.length === allProducts.length}
+        disabled={fields.length === validProducts.length}
       >
         Append
       </button>
@@ -53,16 +58,21 @@ const InventoryChangeFields: React.FC<UseFormMethods<EventInput>> = ({
         const otherFieldSelect = products.filter(
           (value, fieldIndex) => index !== fieldIndex,
         );
-        const options = allProducts
+        const options = validProducts
           .filter((product) => !otherFieldSelect.includes(product.id))
           .map((product) => ({
-            label: product.name,
+            label: `${product.name} (${product.count}개 보유)`,
             value: product.id,
           }));
+        const selectProduct = products[index];
+        const max = selectProduct
+          ? productCountMap.get(selectProduct.toString())
+          : 1;
         return (
-          <div key={field.id}>
+          <div key={field.id} style={{ padding: '20px' }}>
             <Controller
               name={`inventorychangeSet[${index}].productId`}
+              style={{ width: '100%' }}
               control={control}
               render={({ onChange, ref }) => (
                 <Select
@@ -76,24 +86,24 @@ const InventoryChangeFields: React.FC<UseFormMethods<EventInput>> = ({
                   }}
                   inputRef={ref}
                   options={options}
+                  required
                 />
               )}
-              options={options}
-              required
             />
-
-            <input
-              type="number"
-              name={`inventorychangeSet[${index}].value`}
-              ref={register({
-                min: {
-                  value: 1,
-                  message: '1 이상의 수량만 입력 가능합니다',
-                },
-              })}
-              defaultValue={field.value}
-              required
-            />
+            {selectProduct && (
+              <>
+                <span>변화수량</span>
+                <input
+                  type="number"
+                  name={`inventorychangeSet[${index}].value`}
+                  ref={register}
+                  defaultValue={field.value}
+                  min={1}
+                  max={max}
+                  required
+                />
+              </>
+            )}
             {fields.length > 1 && (
               <button type="button" onClick={() => remove(index)}>
                 -
