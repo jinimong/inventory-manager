@@ -13,6 +13,9 @@ const PRODUCTS = gql`
       categories {
         name
       }
+      images {
+        photoThumbnail
+      }
     }
   }
 `;

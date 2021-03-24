@@ -10,6 +10,11 @@ export type ProductCategory = {
   name: string;
 };
 
+export type ProductImage = {
+  photo: string;
+  photoThumbnail: string;
+};
+
 export type Product = {
   id: number;
   name: string;
@@ -22,6 +27,7 @@ export type Product = {
   count: number;
   archived: boolean;
   storeproductSet: StoreProduct[];
+  images: ProductImage[];
 };
 
 export type InventoryChange = {

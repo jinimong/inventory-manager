@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { Product } from '../../utils/types';
 import query from './query';
+import { serverURL } from '../../graphql/apollo';
 
 const Products: React.FC = () => {
   const { loading, error, data } = useQuery<{
@@ -22,6 +23,12 @@ const Products: React.FC = () => {
         {data.allProducts.map((product) => (
           <li key={product.id}>
             <Link to={`${pathname}/${product.id}`}>
+              {product.images.length && (
+                <img
+                  src={`${serverURL}${product.images[0].photoThumbnail}`}
+                  alt=""
+                />
+              )}
               <span>{product.name}</span>
               <span>{product.count}</span>
               <span>
