@@ -50,12 +50,7 @@ class Event(TimestampedModel, EventMixin):
     description = models.TextField(_("설명"))
 
     def __str__(self):
-        text = self.get_event_type_display()
-        if self.store_id:
-            text = f"[{self.store.name}] {text}"
-        if self.description:
-            text += f" ({self.description})"
-        return text
+        return self.get_event_type_display()
 
 
 class InventoryChange(TimestampedModel, InventoryChangeMixin):
