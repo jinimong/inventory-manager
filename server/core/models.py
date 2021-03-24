@@ -14,7 +14,7 @@ class TimestampedModel(models.Model):
 
 
 class Image(TimestampedModel):
-    file = ProcessedImageField(
+    photo = ProcessedImageField(
         upload_to=uuid_upload_to,
         blank=True,
         processors=[ResizeToFill(120, 120)],
@@ -27,3 +27,6 @@ class Image(TimestampedModel):
         format="JPEG",
         options={"quality": 70},
     )
+
+    class Meta:
+        abstract = True

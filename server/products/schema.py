@@ -3,6 +3,7 @@ import graphene
 from django.db import transaction
 
 from graphene_django.types import DjangoObjectType
+from graphene_file_upload.scalars import Upload
 
 from .models import (
     ProductMaterial,
@@ -98,13 +99,14 @@ class CreateProductCategory(graphene.Mutation):
 
 
 class ProductInput(graphene.InputObjectType):
-    name = graphene.String()
-    barcode = graphene.String(required=False)
-    description = graphene.String(required=False)
-    materials = graphene.List(graphene.Int, required=False)
-    categories = graphene.List(graphene.Int, required=False)
-    price = graphene.Int()
-    price_with_pees = graphene.Int()
+    name = graphene.String(required=True)
+    barcode = graphene.String()
+    description = graphene.String()
+    materials = graphene.List(graphene.Int)
+    categories = graphene.List(graphene.Int)
+    price = graphene.Int(required=True)
+    price_with_pees = graphene.Int(required=True)
+    images = graphene.List(Upload)
 
 
 class CreateProduct(graphene.Mutation):
@@ -120,11 +122,26 @@ class CreateProduct(graphene.Mutation):
             for field in Product._meta.many_to_many
             if field.name in product_input
         }
+
+        related_fields = {
+            field.name: product_input.pop(field.name)
+            for field in Product._meta.related_objects
+            if field.name in product_input
+        }
+
         product = Product(**product_input)
         product.save()
 
         for field, value in m2m_fields.items():
             getattr(product, field).add(*value)
+
+        for field, value in related_fields.items():
+            related_manager = getattr(product, field)
+            if type(value) == list:
+                for v in value:
+                    related_manager.create(**v)
+            else:
+                related_manager.create(**value)
 
         return CreateProduct(product=product)
 

@@ -54,15 +54,15 @@ class CreateStore(graphene.Mutation):
 
 
 class InventoryChangeInput(graphene.InputObjectType):
-    product_id = graphene.Int()
-    value = graphene.Int()
+    product_id = graphene.Int(required=True)
+    value = graphene.Int(required=True)
 
 
 class EventInput(graphene.InputObjectType):
-    event_type = graphene.String()
+    event_type = graphene.String(required=True)
     store_id = graphene.Int()
     inventorychange_set = graphene.List(InventoryChangeInput)
-    description = graphene.String(required=False)
+    description = graphene.String()
 
 
 class CreateEvent(graphene.Mutation):

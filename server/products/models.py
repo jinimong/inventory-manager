@@ -87,5 +87,8 @@ class ProductImage(Image):
     """ 제품 사진 """
 
     product = models.ForeignKey(
-        "Product", verbose_name=_("제품"), on_delete=models.CASCADE
+        "Product",
+        verbose_name=_("제품"),
+        related_name="images",
+        on_delete=models.CASCADE,
     )
