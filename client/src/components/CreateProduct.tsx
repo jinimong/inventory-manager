@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { gql, useMutation } from '@apollo/client';
 import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 import query from './Products/query';
 import ProductMaterialSelect from './ProductMaterialSelect';
 import ProductCategorySelect from './ProductCategorySelect';
+
+type ProductImage = {
+  photo: File;
+};
 
 type ProductInput = {
   name: string;
@@ -14,6 +18,7 @@ type ProductInput = {
   categories: number[];
   price: number;
   priceWithPees: number;
+  images: ProductImage[];
 };
 
 const CREATE_PRODUCT = gql`
@@ -35,14 +40,19 @@ const CreateProduct: React.FC = () => {
     categories: [],
     price: 2000,
     priceWithPees: 2500,
+    images: [],
   };
   const [createProduct] = useMutation(CREATE_PRODUCT);
   const history = useHistory();
 
   // eslint-disable-next-line @typescript-eslint/unbound-method
-  const { control, register, handleSubmit } = useForm<ProductInput>({
+  const { control, register, handleSubmit, setValue } = useForm<ProductInput>({
     defaultValues,
   });
+
+  useEffect(() => {
+    register({ name: 'images' });
+  }, [register]);
   const onSubmit = (productInput: ProductInput) =>
     createProduct({
       variables: { productInput },
@@ -61,6 +71,20 @@ const CreateProduct: React.FC = () => {
         render={({ onChange, ref }) => (
           <ProductMaterialSelect onChange={onChange} inputRef={ref} isMulti />
         )}
+      />
+      <input
+        type="file"
+        name="images"
+        multiple
+        accept="image/*"
+        onChange={({ target: { validity, files } }) => {
+          if (files && validity.valid) {
+            setValue(
+              'images',
+              Array.from(files).map((file) => ({ photo: file })),
+            );
+          }
+        }}
       />
       <Controller
         name="categories"
