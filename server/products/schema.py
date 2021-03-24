@@ -38,6 +38,14 @@ class ProductImageType(DjangoObjectType):
     class Meta:
         model = ProductImage
 
+    photo_thumbnail = graphene.String()
+
+    def resolve_photo(self, info, **kwargs):
+        return getattr(self.photo, "url")
+
+    def resolve_photo_thumbnail(self, info, **kwargs):
+        return getattr(self.photo_thumbnail, "url")
+
 
 class Query(graphene.ObjectType):
     material = graphene.Field(ProductMaterialType, id=graphene.Int())
