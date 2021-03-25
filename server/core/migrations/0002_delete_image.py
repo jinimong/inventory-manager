@@ -6,12 +6,10 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('products', '0005_delete_productimage'),
-        ('core', '0001_initial'),
+        ("products", "0005_delete_productimage"),
+        ("core", "0001_initial"),
     ]
 
     operations = [
-        migrations.DeleteModel(
-            name='Image',
-        ),
+        migrations.DeleteModel(name="Image",),
     ]
