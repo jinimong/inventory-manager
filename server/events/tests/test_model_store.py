@@ -8,4 +8,3 @@ def store(store_factory):
 
 def test_str(store):
     assert str(store) == store.name
-

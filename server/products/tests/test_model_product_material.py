@@ -1,7 +1,7 @@
 import pytest
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture
 def material(product_material_factory):
     return product_material_factory()
 

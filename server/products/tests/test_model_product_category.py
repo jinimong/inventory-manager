@@ -1,7 +1,7 @@
 import pytest
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture
 def category(product_category_factory):
     return product_category_factory()
 
