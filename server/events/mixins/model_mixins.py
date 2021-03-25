@@ -49,8 +49,8 @@ class InventoryChangeMixin:
             [
                 cls(
                     event=event,
-                    product_id=inventorychange.product_id,
-                    count=abs(inventorychange.value),
+                    product_id=inventorychange.get("product_id"),
+                    value=abs(inventorychange.get("value")),
                 )
                 for inventorychange in inventorychange_set
             ]

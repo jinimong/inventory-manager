@@ -62,9 +62,7 @@ class InventoryChange(TimestampedModel, InventoryChangeMixin):
     product = models.ForeignKey(
         "products.Product", verbose_name=_("제품"), on_delete=models.CASCADE
     )
-    count = models.IntegerField(_("변화 수량"))
+    value = models.IntegerField(_("변화 수량"))
 
     def __str__(self):
-        count = f"+{self.count}" if self.count > 0 else self.count
-        text = f"{self.product.name} : {count} {self.event}"
-        return text
+        return f"{self.product.name} : {self.value}"

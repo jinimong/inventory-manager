@@ -36,9 +36,9 @@ def inventorychange_set_factory(faker, product_factory):
 def inventorychange_set_factory_from_store(faker):
     def factory(store: Store):
         products = {
-            store_product.product__id: store_product.count
+            store_product.product_id: store_product.count
             for store_product in store.storeproduct_set.values_list(
-                "product__id", "count", named=True
+                "product_id", "count", named=True
             )
         }
         return [

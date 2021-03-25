@@ -58,7 +58,7 @@ class StoreProduct(TimestampedModel):
     product = models.ForeignKey(
         "products.Product", verbose_name=_("제품"), on_delete=models.CASCADE,
     )
-    count = models.IntegerField(_("재고 수량"))
+    count = models.PositiveIntegerField(_("재고 수량"))
 
     class Meta:
         constraints = [

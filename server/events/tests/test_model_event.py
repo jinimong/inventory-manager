@@ -43,9 +43,9 @@ def get_store_product_counter(store: Store):
     return (
         Counter(
             {
-                store_product.product__id: store_product.count
+                store_product.product_id: store_product.count
                 for store_product in store.storeproduct_set.values_list(
-                    "product__id", "count", named=True
+                    "product_id", "count", named=True
                 ).iterator()
             }
         )
