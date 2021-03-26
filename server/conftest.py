@@ -1,6 +1,8 @@
 import pytest
 
 from django.utils import timezone
+from graphene.test import Client
+from config.schema import schema
 
 # flake8: noqa: F401
 from products.tests.conftest import product_factory
@@ -19,3 +21,8 @@ def faker_session_locale():
 @pytest.fixture(scope="session", autouse=True)
 def faker_seed():
     return timezone.now()
+
+
+@pytest.fixture
+def client():
+    return Client(schema=schema)
