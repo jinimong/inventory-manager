@@ -1,8 +1,5 @@
-from graphql.language.ast import Variable
-
-
-def test_query(client, product_material_factory):
-    material = product_material_factory()
+def test_query(snapshot, client, product_material_factory):
+    material = product_material_factory(name="material")
     query = """
         query ($id: Int!) {
             material(id: $id) {
@@ -12,4 +9,4 @@ def test_query(client, product_material_factory):
         }
     """
     response = client.execute(query, variable_values={"id": material.id})
-    assert response["data"]["material"]["name"] == material.name
+    snapshot.assert_match(response)
