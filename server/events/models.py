@@ -23,6 +23,10 @@ EVENT_TYPE_CHOICES = (
     (DEFECT_PRODUCT_IN_HOME, "불량:집"),
 )
 
+EVENT_TYPES_ABOUT_STORE = set(
+    [SEND_PRODUCT, SETTLE_SALE, LEAVE_STORE, DEFECT_PRODUCT_IN_STORE]
+)
+
 
 class Store(TimestampedModel):
     """ 입점처 """

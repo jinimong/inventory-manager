@@ -1,18 +1,11 @@
 import pytest
 
 from typing import Callable
+from pytest_factoryboy import register
+from events.factories import StoreFactory
 from events.models import EVENT_TYPE_CHOICES, Event, Store
 
-
-@pytest.fixture
-def store_factory(faker) -> Callable[[str], Store]:
-    def factory(name=None, description=None):
-        return Store.objects.create(
-            name=name or faker.slug(),
-            description=description or faker.sentence(),
-        )
-
-    return factory
+register(StoreFactory)
 
 
 @pytest.fixture
