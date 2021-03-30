@@ -26,7 +26,7 @@ const CreateEvent: React.FC = () => {
     eventType: '',
     storeId: undefined,
     description: '',
-    inventorychangeSet: [{ productId: undefined, value: 1 }],
+    inventoryChanges: [{ productId: undefined, value: 1 }],
   };
   const [createEvent] = useMutation(CREATE_EVENT);
 

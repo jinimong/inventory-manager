@@ -10,7 +10,7 @@ register(InventoryChangeFactory)
 
 
 @pytest.fixture
-def inventorychange_set_factory(faker, product_factory):
+def inventory_changes_factory(faker, product_factory):
     def factory():
         result = []
         for _ in range(faker.random_digit_not_null()):
@@ -27,11 +27,11 @@ def inventorychange_set_factory(faker, product_factory):
 
 
 @pytest.fixture
-def inventorychange_set_factory_from_store(faker):
+def inventory_changes_factory_from_store(faker):
     def factory(store: Store):
         products = {
             store_product.product_id: store_product.count
-            for store_product in store.storeproduct_set.values_list(
+            for store_product in store.store_products.values_list(
                 "product_id", "count", named=True
             )
         }

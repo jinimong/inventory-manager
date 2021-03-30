@@ -38,6 +38,6 @@ class EventFactory(factory.django.DjangoModelFactory):
         yes_declaration=factory.SubFactory(StoreFactory),
         no_declaration=None,
     )
-    inventorychange_set = factory.RelatedFactoryList(
+    inventory_changes = factory.RelatedFactoryList(
         InventoryChangeFactory, factory_related_name="event",
     )

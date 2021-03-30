@@ -17,7 +17,7 @@ const PRODUCT_DETAIL = gql`
         id
         name
       }
-      storeproductSet {
+      storeProducts {
         id
         store {
           id
@@ -47,7 +47,7 @@ const ProductDetail: React.FC = () => {
       count,
       materials,
       categories,
-      storeproductSet,
+      storeProducts,
     },
   } = data;
 
@@ -89,9 +89,9 @@ const ProductDetail: React.FC = () => {
           ))}
         </div>
       )}
-      {storeproductSet && (
+      {storeProducts && (
         <ul>
-          {storeproductSet.map((storeProduct) => (
+          {storeProducts.map((storeProduct) => (
             <li key={storeProduct.id}>
               <span>{storeProduct.store.name}</span>
               <span>{storeProduct.count}</span>

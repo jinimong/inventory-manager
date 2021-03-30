@@ -24,18 +24,18 @@ EVENT_TYPE_PROCESS = {
 
 class EventMixin:
     @classmethod
-    def create_instance(cls, inventorychange_set, **input_kwargs):
+    def create_instance(cls, inventory_changes, **input_kwargs):
         """ 이벤트 인스턴스 생성 """
         event = cls.objects.create(**input_kwargs)
-        event._process_by_event_type(inventorychange_set)
+        event._process_by_event_type(inventory_changes)
         return event
 
-    def _process_by_event_type(self, inventorychange_set) -> None:
+    def _process_by_event_type(self, inventory_changes) -> None:
         """ 이벤트타입에 따른 재고 처리 """
         processes = EVENT_TYPE_PROCESS[self.event_type]
 
         for process in processes:
-            for inventorychange in inventorychange_set:
+            for inventorychange in inventory_changes:
                 product_id = inventorychange.get("product_id")
                 value = inventorychange.get("value", 0) * process.weight
                 process.model.update_inventory(self.store, product_id, value)
@@ -43,7 +43,7 @@ class EventMixin:
 
 class InventoryChangeMixin:
     @classmethod
-    def bulk_create_instance(cls, event, inventorychange_set):
+    def bulk_create_instance(cls, event, inventory_changes):
         """ 이벤트 인스턴스 생성 """
         cls.objects.bulk_create(
             [
@@ -52,6 +52,6 @@ class InventoryChangeMixin:
                     product_id=inventorychange.get("product_id"),
                     value=abs(inventorychange.get("value")),
                 )
-                for inventorychange in inventorychange_set
+                for inventorychange in inventory_changes
             ]
         )

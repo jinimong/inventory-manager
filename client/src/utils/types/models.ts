@@ -26,21 +26,21 @@ export type Product = {
   priceWithPees: number;
   count: number;
   archived: boolean;
-  storeproductSet: StoreProduct[];
+  storeProducts: StoreProduct[];
   images: ProductImage[];
 };
 
 export type InventoryChange = {
   id: number;
   product: Product;
-  count: number;
+  value: number;
 };
 
 export type Store = {
   id: number;
   name: string;
   description: string;
-  storeproductSet: StoreProduct[];
+  storeProducts: StoreProduct[];
   eventSet: Event[];
 };
 
@@ -58,5 +58,5 @@ export type Event = {
   updatedAt: string;
   description: string;
   store: Store;
-  inventorychangeSet: InventoryChange[];
+  inventoryChanges: InventoryChange[];
 };

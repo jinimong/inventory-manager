@@ -12,13 +12,13 @@ const EVENT_DETAIL = gql`
         name
       }
       description
-      inventorychangeSet {
+      inventoryChanges {
         id
         product {
           id
           name
         }
-        count
+        value
       }
     }
   }
@@ -33,7 +33,7 @@ const EventDetail: React.FC = () => {
     return <div>Loading...</div>;
   }
   const {
-    event: { eventType, store, description, inventorychangeSet },
+    event: { eventType, store, description, inventoryChanges },
   } = data;
   return (
     <div>
@@ -57,10 +57,10 @@ const EventDetail: React.FC = () => {
       )}
       <hr />
       <ul>
-        {inventorychangeSet.map((inventoryChange) => (
+        {inventoryChanges.map((inventoryChange) => (
           <li
             key={inventoryChange.id}
-          >{`${inventoryChange.product.name} : ${inventoryChange.count}`}</li>
+          >{`${inventoryChange.product.name} : ${inventoryChange.value}`}</li>
         ))}
       </ul>
     </div>

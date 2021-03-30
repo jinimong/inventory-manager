@@ -8,7 +8,7 @@ const STORE_DETAIL = gql`
     store(id: $id) {
       name
       description
-      storeproductSet {
+      storeProducts {
         id
         product {
           id
@@ -36,7 +36,7 @@ const StoreDetail: React.FC = () => {
   }
 
   const {
-    store: { name, description, storeproductSet, eventSet },
+    store: { name, description, storeProducts, eventSet },
   } = data;
 
   return (
@@ -54,9 +54,9 @@ const StoreDetail: React.FC = () => {
         </div>
       )}
       <hr />
-      {storeproductSet.length ? (
+      {storeProducts.length ? (
         <ul>
-          {storeproductSet.map((storeProduct) => (
+          {storeProducts.map((storeProduct) => (
             <li key={storeProduct.id}>
               <span>{storeProduct.product.name}</span>
               <span>{storeProduct.count}</span>

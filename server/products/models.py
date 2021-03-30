@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models.fields import related
 from django.shortcuts import get_object_or_404
 from django.utils.translation import gettext as _
 
@@ -29,9 +30,11 @@ class Product(TimestampedModel):
     name = models.CharField(_("이름"), max_length=50, unique=True)
     barcode = models.CharField(_("바코드"), max_length=50, blank=True)
     description = models.TextField(_("설명"))
-    materials = models.ManyToManyField("ProductMaterial", verbose_name=_("재질"))
+    materials = models.ManyToManyField(
+        "ProductMaterial", related_name="products", verbose_name=_("재질")
+    )
     categories = models.ManyToManyField(
-        "ProductCategory", verbose_name=_("카테고리")
+        "ProductCategory", related_name="products", verbose_name=_("카테고리")
     )
     price = models.PositiveIntegerField(_("가격"))
     price_with_pees = models.PositiveIntegerField(_("수수료포함 가격"))
@@ -53,10 +56,16 @@ class StoreProduct(TimestampedModel):
     """ 입점처 제품 """
 
     store = models.ForeignKey(
-        "events.Store", verbose_name=_("입점처"), on_delete=models.CASCADE,
+        "events.Store",
+        related_name="store_products",
+        verbose_name=_("입점처"),
+        on_delete=models.CASCADE,
     )
     product = models.ForeignKey(
-        "products.Product", verbose_name=_("제품"), on_delete=models.CASCADE,
+        "products.Product",
+        related_name="store_products",
+        verbose_name=_("제품"),
+        on_delete=models.CASCADE,
     )
     count = models.PositiveIntegerField(_("재고 수량"))
 

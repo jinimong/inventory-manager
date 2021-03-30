@@ -61,7 +61,7 @@ class InventoryChangeInput(graphene.InputObjectType):
 class EventInput(graphene.InputObjectType):
     event_type = graphene.String(required=True)
     store_id = graphene.Int()
-    inventorychange_set = graphene.List(InventoryChangeInput)
+    inventory_changes = graphene.List(InventoryChangeInput)
     description = graphene.String()
 
 
@@ -73,9 +73,9 @@ class CreateEvent(graphene.Mutation):
 
     @transaction.atomic
     def mutate(self, info, event_input):
-        inventorychange_set = event_input.pop("inventorychange_set")
-        event = Event.create_instance(inventorychange_set, **event_input)
-        InventoryChange.bulk_create_instance(event, inventorychange_set)
+        inventory_changes = event_input.pop("inventory_changes")
+        event = Event.create_instance(inventory_changes, **event_input)
+        InventoryChange.bulk_create_instance(event, inventory_changes)
         return CreateEvent(event=event)
 
 

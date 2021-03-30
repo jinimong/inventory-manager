@@ -7,7 +7,26 @@ from snapshottest import Snapshot
 
 snapshots = Snapshot()
 
-snapshots['test_query 1'] = {
+snapshots['test_list_query 1'] = {
+    'data': {
+        'allMaterials': [
+            {
+                'id': '1',
+                'name': 'material_0'
+            },
+            {
+                'id': '2',
+                'name': 'material_1'
+            },
+            {
+                'id': '3',
+                'name': 'material_2'
+            }
+        ]
+    }
+}
+
+snapshots['test_retrieve_query 1'] = {
     'data': {
         'material': {
             'id': '1',

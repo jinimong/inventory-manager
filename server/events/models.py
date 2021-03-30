@@ -46,6 +46,7 @@ class Event(TimestampedModel, EventMixin):
     )
     store = models.ForeignKey(
         "Store",
+        related_name="events",
         verbose_name=_("입점처"),
         on_delete=models.CASCADE,
         blank=True,
@@ -61,10 +62,16 @@ class InventoryChange(TimestampedModel, InventoryChangeMixin):
     """ 재고 변화 """
 
     event = models.ForeignKey(
-        "Event", verbose_name=_("재고 변화 내역"), on_delete=models.CASCADE
+        "Event",
+        related_name="inventory_changes",
+        verbose_name=_("재고 변화 내역"),
+        on_delete=models.CASCADE,
     )
     product = models.ForeignKey(
-        "products.Product", verbose_name=_("제품"), on_delete=models.CASCADE
+        "products.Product",
+        related_name="inventory_changes",
+        verbose_name=_("제품"),
+        on_delete=models.CASCADE,
     )
     value = models.IntegerField(_("변화 수량"))
 

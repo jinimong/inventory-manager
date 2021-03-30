@@ -13,15 +13,15 @@ def test_str(faker, event_factory, product_factory):
     )
 
 
-def test_bulk_create_instance(inventorychange_set_factory, event_factory):
-    inventorychange_set = inventorychange_set_factory()
+def test_bulk_create_instance(inventory_changes_factory, event_factory):
+    inventory_changes = inventory_changes_factory()
     event = event_factory(
-        event_type=ORDER_PRODUCT, inventorychange_set=inventorychange_set
+        event_type=ORDER_PRODUCT, inventory_changes=inventory_changes
     )
     InventoryChange.bulk_create_instance(
-        event=event, inventorychange_set=inventorychange_set
+        event=event, inventory_changes=inventory_changes
     )
 
-    assert inventorychange_set == list(
-        event.inventorychange_set.values("product_id", "value")
+    assert inventory_changes == list(
+        event.inventory_changes.values("product_id", "value")
     )

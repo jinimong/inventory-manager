@@ -27,7 +27,7 @@ const InventoryChangeFields: React.FC<UseFormMethods<EventInput>> = ({
   }>(PRODUCTS);
 
   const { fields, remove, append } = useFieldArray<InventoryChangeInput>({
-    name: 'inventorychangeSet',
+    name: 'inventoryChanges',
     control,
   });
 
@@ -71,7 +71,7 @@ const InventoryChangeFields: React.FC<UseFormMethods<EventInput>> = ({
         return (
           <div key={field.id} style={{ padding: '20px' }}>
             <Controller
-              name={`inventorychangeSet[${index}].productId`}
+              name={`inventoryChanges[${index}].productId`}
               style={{ width: '100%' }}
               control={control}
               render={({ onChange, ref }) => (
@@ -95,7 +95,7 @@ const InventoryChangeFields: React.FC<UseFormMethods<EventInput>> = ({
                 <span>변화수량</span>
                 <input
                   type="number"
-                  name={`inventorychangeSet[${index}].value`}
+                  name={`inventoryChanges[${index}].value`}
                   ref={register}
                   defaultValue={field.value}
                   min={1}
@@ -111,7 +111,7 @@ const InventoryChangeFields: React.FC<UseFormMethods<EventInput>> = ({
             )}
             <ErrorMessage
               errors={errors}
-              name={`inventorychangeSet[${index}].value`}
+              name={`inventoryChanges[${index}].value`}
               render={({ message }) => (
                 <p style={{ color: 'red' }}>{message}</p>
               )}

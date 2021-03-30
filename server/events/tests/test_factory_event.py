@@ -32,4 +32,4 @@ def test_create_with_exist_store(event_type, store_factory, event_factory):
 
 def test_create_with_inventory_change(event_factory):
     event = event_factory()
-    assert event.inventorychange_set.exists()
+    assert event.inventory_changes.exists()
