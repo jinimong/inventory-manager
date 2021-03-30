@@ -23,3 +23,4 @@ class ProductFactory(factory.django.DjangoModelFactory):
 
     class Meta:
         model = "products.Product"
+        django_get_or_create = ("name",)
