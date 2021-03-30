@@ -1,11 +1,12 @@
 import pytest
 
-from typing import Callable
 from pytest_factoryboy import register
-from events.factories import StoreFactory
-from events.models import EVENT_TYPE_CHOICES, Event, Store
+from events.factories import EventFactory, InventoryChangeFactory, StoreFactory
+from events.models import Store
 
 register(StoreFactory)
+register(EventFactory)
+register(InventoryChangeFactory)
 
 
 @pytest.fixture
@@ -41,26 +42,5 @@ def inventorychange_set_factory_from_store(faker):
             }
             for choice in set(faker.random_choices(elements=products.keys()))
         ]
-
-    return factory
-
-
-@pytest.fixture
-def event_factory(faker):
-    def factory(
-        event_type=None,
-        store: Store = None,
-        description=None,
-        inventorychange_set=[],
-    ):
-        return Event.create_instance(
-            inventorychange_set=inventorychange_set,
-            event_type=event_type
-            or faker.random_element(
-                elements=[choice[0] for choice in EVENT_TYPE_CHOICES]
-            ),
-            store=store,
-            description=description or faker.sentence(),
-        )
 
     return factory
