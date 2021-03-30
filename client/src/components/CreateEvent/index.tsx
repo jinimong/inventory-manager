@@ -6,10 +6,12 @@ import {
   EventType,
   EventTypeMap,
   eventTypesAboutStore,
+  eventTypesDecreaseFromStore,
 } from '../../utils/types';
 import { EventInput } from './types';
 import InventoryChangeFields from './InventoryChangeFields';
 import StoreIdField from './StoreIdField';
+import InventoryChangeFromStoreFields from './InventoryChangeFromStoreFields';
 
 const CREATE_EVENT = gql`
   mutation CreateEvent($eventInput: EventInput) {
@@ -37,6 +39,7 @@ const CreateEvent: React.FC = () => {
   const history = useHistory();
 
   const watchEventType = watch('eventType');
+  const watchStoreId = watch('storeId');
   const onSubmit = (eventInput: EventInput) =>
     createEvent({
       variables: { eventInput },
@@ -54,10 +57,16 @@ const CreateEvent: React.FC = () => {
         ))}
       </select>
       {eventTypesAboutStore.includes(watchEventType as EventType) && (
-        <StoreIdField {...form} />
+        <StoreIdField form={form} />
       )}
       <textarea placeholder="메모" name="description" ref={register} />
-      <InventoryChangeFields {...form} />
+      {eventTypesDecreaseFromStore.includes(watchEventType as EventType) ? (
+        watchStoreId && (
+          <InventoryChangeFromStoreFields storeId={watchStoreId} form={form} />
+        )
+      ) : (
+        <InventoryChangeFields form={form} />
+      )}
       <button type="submit">Submit</button>
     </form>
   );

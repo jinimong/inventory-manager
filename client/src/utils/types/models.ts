@@ -41,7 +41,7 @@ export type Store = {
   name: string;
   description: string;
   storeProducts: StoreProduct[];
-  eventSet: Event[];
+  events: Event[];
 };
 
 export type StoreProduct = {

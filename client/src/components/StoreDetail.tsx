@@ -16,7 +16,7 @@ const STORE_DETAIL = gql`
         }
         count
       }
-      eventSet {
+      events {
         id
         eventType
         createdAt
@@ -36,7 +36,7 @@ const StoreDetail: React.FC = () => {
   }
 
   const {
-    store: { name, description, storeProducts, eventSet },
+    store: { name, description, storeProducts, events },
   } = data;
 
   return (
@@ -67,9 +67,9 @@ const StoreDetail: React.FC = () => {
         <div>입고된 상품 없음</div>
       )}
       <hr />
-      {eventSet.length ? (
+      {events.length ? (
         <ul>
-          {eventSet.map((event) => (
+          {events.map((event) => (
             <li key={event.id}>
               <span>{event.eventType}</span>
               <span>{event.createdAt}</span>

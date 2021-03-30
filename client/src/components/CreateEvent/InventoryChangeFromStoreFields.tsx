@@ -3,26 +3,39 @@ import React, { useState } from 'react';
 import Select from 'react-select';
 import { Controller, useFieldArray, UseFormMethods } from 'react-hook-form';
 import { ErrorMessage } from '@hookform/error-message';
-import { Product, OptionType } from '../../utils/types';
+import { OptionType, Store } from '../../utils/types';
 import { EventInput, InventoryChangeInput } from './types';
 
-const PRODUCTS = gql`
-  query {
-    allProducts {
-      id
+const STORE_DETAIL = gql`
+  query storeDetail($id: Int!) {
+    store(id: $id) {
       name
-      count
+      description
+      storeProducts {
+        id
+        product {
+          id
+          name
+        }
+        count
+      }
+      events {
+        id
+        eventType
+        createdAt
+      }
     }
   }
 `;
 
-const InventoryChangeFields: React.FC<{ form: UseFormMethods<EventInput> }> = ({
-  form: { control, register, errors },
-}) => {
+const InventoryChangeFromStoreFields: React.FC<{
+  storeId?: number;
+  form: UseFormMethods<EventInput>;
+}> = ({ storeId, form: { control, register, errors } }) => {
   const [products, setProducts] = useState<(string | number)[]>([]);
   const { loading, error, data } = useQuery<{
-    allProducts: Product[];
-  }>(PRODUCTS);
+    store: Store;
+  }>(STORE_DETAIL, { variables: { id: storeId } });
 
   const { fields, remove, append } = useFieldArray<InventoryChangeInput>({
     name: 'inventoryChanges',
@@ -32,10 +45,15 @@ const InventoryChangeFields: React.FC<{ form: UseFormMethods<EventInput> }> = ({
   if (loading || error || !data) {
     return <div>Loading...</div>;
   }
-  const { allProducts } = data;
-  const validProducts = allProducts.filter((product) => product.count > 0);
+  const { store } = data;
+  const validProducts = store.storeProducts.filter(
+    (storeProduct) => storeProduct.count > 0,
+  );
   const productCountMap = new Map(
-    validProducts.map((product) => [product.id.toString(), product.count]),
+    validProducts.map((storeProduct) => [
+      storeProduct.product.id.toString(),
+      storeProduct.count,
+    ]),
   );
 
   return (
@@ -57,10 +75,13 @@ const InventoryChangeFields: React.FC<{ form: UseFormMethods<EventInput> }> = ({
           (value, fieldIndex) => index !== fieldIndex,
         );
         const options = validProducts
-          .filter((product) => !otherFieldSelect.includes(product.id))
-          .map((product) => ({
-            label: `${product.name}`,
-            value: product.id,
+          .filter(
+            (storeProduct) =>
+              !otherFieldSelect.includes(storeProduct.product.id),
+          )
+          .map((storeProduct) => ({
+            label: `${storeProduct.product.name}`,
+            value: storeProduct.product.id,
           }));
         const selectProduct = products[index];
         const max = selectProduct
@@ -121,4 +142,4 @@ const InventoryChangeFields: React.FC<{ form: UseFormMethods<EventInput> }> = ({
   );
 };
 
-export default InventoryChangeFields;
+export default InventoryChangeFromStoreFields;

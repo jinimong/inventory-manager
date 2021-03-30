@@ -30,3 +30,9 @@ export const eventTypesAboutStore = [
   EventType.LEAVE_STORE,
   EventType.DEFECT_PRODUCT_IN_STORE,
 ];
+
+export const eventTypesDecreaseFromStore = [
+  EventType.SETTLE_SALE,
+  EventType.LEAVE_STORE,
+  EventType.DEFECT_PRODUCT_IN_STORE,
+];

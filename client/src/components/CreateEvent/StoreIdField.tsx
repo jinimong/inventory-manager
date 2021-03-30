@@ -14,7 +14,9 @@ const STORES = gql`
   }
 `;
 
-const StoreIdField: React.FC<UseFormMethods<EventInput>> = ({ control }) => {
+const StoreIdField: React.FC<{ form: UseFormMethods<EventInput> }> = ({
+  form: { control },
+}) => {
   const [loadAllStores, { called, loading, data }] = useLazyQuery<{
     allStores: Store[];
   }>(STORES);
