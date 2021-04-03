@@ -1,5 +1,4 @@
 from django.db import models
-from django.db.models.fields import related
 from django.shortcuts import get_object_or_404
 from django.utils.translation import gettext as _
 
