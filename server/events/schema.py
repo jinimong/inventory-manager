@@ -10,6 +10,7 @@ from core.constants import (
 import graphene
 
 from django.db import transaction
+from django.db.models import F
 
 from graphene_django.types import DjangoObjectType
 
@@ -156,6 +157,12 @@ class BaseEventMutation(graphene.Mutation):
             inventory_changes=inventory_changes,
             **input
         )
+
+        if not inventory_changes and event.store:
+            inventory_changes = event.store.store_products.annotate(
+                value=F("count")
+            ).values("product_id", "value")
+
         InventoryChange.bulk_create_instance(event, inventory_changes)
         return cls(event=event)
 
