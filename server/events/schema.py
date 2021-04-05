@@ -1,3 +1,12 @@
+from core.constants import (
+    DEFECT_PRODUCT_IN_HOME,
+    DEFECT_PRODUCT_IN_STORE,
+    LEAVE_STORE,
+    ORDER_PRODUCT,
+    SELL_DIRECT,
+    SEND_PRODUCT,
+    SETTLE_SALE,
+)
 import graphene
 
 from django.db import transaction
@@ -79,6 +88,134 @@ class CreateEvent(graphene.Mutation):
         return CreateEvent(event=event)
 
 
+class BaseEventInput(graphene.InputObjectType):
+    description = graphene.String()
+
+    class Meta:
+        abstract = True
+
+
+class InventoryChangeFieldMixin(graphene.InputObjectType):
+    inventory_changes = graphene.List(InventoryChangeInput)
+
+
+class StoreFieldMixin(graphene.InputObjectType):
+    store_id = graphene.Int()
+
+
+class SellDirectInput(InventoryChangeFieldMixin, BaseEventInput):
+    pass
+
+
+class OrderProductInput(InventoryChangeFieldMixin, BaseEventInput):
+    pass
+
+
+class SendProductInput(
+    InventoryChangeFieldMixin, StoreFieldMixin, BaseEventInput
+):
+    pass
+
+
+class SettleSaleInput(
+    InventoryChangeFieldMixin, StoreFieldMixin, BaseEventInput
+):
+    pass
+
+
+class LeaveStoreInput(StoreFieldMixin, BaseEventInput):
+    pass
+
+
+class DefectProductInStoreInput(
+    InventoryChangeFieldMixin, StoreFieldMixin, BaseEventInput
+):
+    pass
+
+
+class DefectProductInHomeInput(InventoryChangeFieldMixin, BaseEventInput):
+    pass
+
+
+class BaseEventMutation(graphene.Mutation):
+    event = graphene.Field(EventType)
+    event_type = None
+
+    class Meta:
+        abstract = True
+
+    class Arguments:
+        input = None
+
+    @classmethod
+    @transaction.atomic
+    def mutate(cls, root, info, input):
+        inventory_changes = input.pop("inventory_changes", None)
+        event = Event.create_instance(
+            event_type=cls.event_type,
+            inventory_changes=inventory_changes,
+            **input
+        )
+        InventoryChange.bulk_create_instance(event, inventory_changes)
+        return cls(event=event)
+
+
+class SellDirect(BaseEventMutation):
+    event_type = SELL_DIRECT
+
+    class Arguments:
+        input = SellDirectInput()
+
+
+class OrderProduct(BaseEventMutation):
+    event_type = ORDER_PRODUCT
+
+    class Arguments:
+        input = OrderProductInput()
+
+
+class SendProduct(BaseEventMutation):
+    event_type = SEND_PRODUCT
+
+    class Arguments:
+        input = SendProductInput()
+
+
+class SettleSale(BaseEventMutation):
+    event_type = SETTLE_SALE
+
+    class Arguments:
+        input = SettleSaleInput()
+
+
+class LeaveStore(BaseEventMutation):
+    event_type = LEAVE_STORE
+
+    class Arguments:
+        input = LeaveStoreInput()
+
+
+class DefectProductInStore(BaseEventMutation):
+    event_type = DEFECT_PRODUCT_IN_STORE
+
+    class Arguments:
+        input = DefectProductInStoreInput()
+
+
+class DefectProductInHome(BaseEventMutation):
+    event_type = DEFECT_PRODUCT_IN_HOME
+
+    class Arguments:
+        input = DefectProductInHomeInput()
+
+
 class Mutation(graphene.ObjectType):
     create_store = CreateStore.Field()
     create_event = CreateEvent.Field()
+    sell_direct = SellDirect.Field()
+    order_product = OrderProduct.Field()
+    send_product = SendProduct.Field()
+    settle_sale = SettleSale.Field()
+    leave_store = LeaveStore.Field()
+    defect_product_in_store = DefectProductInStore.Field()
+    defect_product_in_home = DefectProductInHome.Field()

@@ -24,10 +24,11 @@ EVENT_TYPE_PROCESS = {
 
 class EventMixin:
     @classmethod
-    def create_instance(cls, inventory_changes, **input_kwargs):
+    def create_instance(cls, event_type, inventory_changes=None, **kwargs):
         """ 이벤트 인스턴스 생성 """
-        event = cls.objects.create(**input_kwargs)
-        event._process_by_event_type(inventory_changes)
+        event = cls.objects.create(event_type=event_type, **kwargs)
+        if inventory_changes:
+            event._process_by_event_type(inventory_changes)
         return event
 
     def _process_by_event_type(self, inventory_changes) -> None:
