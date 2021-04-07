@@ -7,34 +7,19 @@ from snapshottest import Snapshot
 
 snapshots = Snapshot()
 
-snapshots['test_sell_direct 1'] = {
+snapshots['test_sell_direct[empty_inventory_changes-False] 1'] = {
     'data': {
         'sellDirect': {
             'event': {
-                'description': 'Sell Direct Description',
                 'eventType': 'SD',
                 'inventoryChanges': [
-                    {
-                        'product': {
-                            'id': '1',
-                            'name': 'product_1'
-                        },
-                        'value': 100
-                    },
-                    {
-                        'product': {
-                            'id': '2',
-                            'name': 'product_2'
-                        },
-                        'value': 100
-                    }
                 ]
             }
         }
     }
 }
 
-snapshots['test_sell_direct_fail_by_count_over 1'] = {
+snapshots['test_sell_direct[invalid_inventory_changes-False] 1'] = {
     'data': {
         'sellDirect': None
     },
@@ -54,13 +39,28 @@ snapshots['test_sell_direct_fail_by_count_over 1'] = {
     ]
 }
 
-snapshots['test_sell_direct_fail_without_inventory_changes 1'] = {
+snapshots['test_sell_direct[inventory_changes-True] 1'] = {
     'data': {
         'sellDirect': {
             'event': {
-                'description': 'Invalid Sell Direct Description',
                 'eventType': 'SD',
                 'inventoryChanges': [
+                    {
+                        'product': {
+                            'count': 0,
+                            'id': '1',
+                            'name': 'product_1'
+                        },
+                        'value': 100
+                    },
+                    {
+                        'product': {
+                            'count': 0,
+                            'id': '2',
+                            'name': 'product_2'
+                        },
+                        'value': 100
+                    }
                 ]
             }
         }

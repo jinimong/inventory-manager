@@ -6,11 +6,11 @@ query = """
         sellDirect(input: $input) {
             event {
                 eventType
-                description
                 inventoryChanges {
                     product {
                         id
                         name
+                        count
                     }
                     value
                 }
@@ -21,9 +21,16 @@ query = """
 
 
 @pytest.fixture
-def inventoryChanges(product_factory):
-    product_1 = product_factory(name="product_1", count=100)
-    product_2 = product_factory(name="product_2", count=100)
+def products(product_factory):
+    return (
+        product_factory(name="product_1", count=100),
+        product_factory(name="product_2", count=100),
+    )
+
+
+@pytest.fixture
+def inventory_changes(products):
+    product_1, product_2 = products
     return [
         {"productId": product_1.id, "value": product_1.count},
         {"productId": product_2.id, "value": product_2.count},
@@ -31,53 +38,33 @@ def inventoryChanges(product_factory):
 
 
 @pytest.fixture
-def invalidInventoryChanges(product_factory):
-    product_1 = product_factory(name="product_1", count=100)
-    product_2 = product_factory(name="product_2", count=100)
+def invalid_inventory_changes(products):
+    product_1, product_2 = products
     return [
         {"productId": product_1.id, "value": product_1.count + 1},
         {"productId": product_2.id, "value": product_2.count},
     ]
 
 
-def test_sell_direct(snapshot, client, inventoryChanges):
+@pytest.fixture
+def empty_inventory_changes():
+    return []
+
+
+@pytest.mark.parametrize(
+    "changes, expected_result",
+    [
+        ("inventory_changes", True),
+        ("invalid_inventory_changes", False),
+        ("empty_inventory_changes", False),
+    ],
+)
+def test_sell_direct(snapshot, client, request, changes, expected_result):
     response = client.execute(
         query,
         variable_values={
-            "input": {
-                "description": "Sell Direct Description",
-                "inventoryChanges": inventoryChanges,
-            }
+            "input": {"inventoryChanges": request.getfixturevalue(changes)}
         },
     )
     snapshot.assert_match(response)
-
-
-def test_sell_direct_fail_by_count_over(
-    snapshot, client, invalidInventoryChanges
-):
-    response = client.execute(
-        query,
-        variable_values={
-            "input": {
-                "description": "Invalid Sell Direct Description",
-                "inventoryChanges": invalidInventoryChanges,
-            }
-        },
-    )
-    snapshot.assert_match(response)
-    assert response["data"]["sellDirect"] == None
-
-
-def test_sell_direct_fail_without_inventory_changes(snapshot, client):
-    response = client.execute(
-        query,
-        variable_values={
-            "input": {
-                "description": "Invalid Sell Direct Description",
-                "inventoryChanges": [],
-            }
-        },
-    )
-    snapshot.assert_match(response)
-    assert response["data"]["sellDirect"] == None
+    assert bool(response["data"]["sellDirect"]) == expected_result
